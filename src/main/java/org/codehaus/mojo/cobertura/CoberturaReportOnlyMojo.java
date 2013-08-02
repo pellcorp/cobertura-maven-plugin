@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.cobertura.configuration.MaxHeapSizeUtil;
 import org.codehaus.mojo.cobertura.tasks.CommandLineArguments;
 import org.codehaus.mojo.cobertura.tasks.ReportTask;
@@ -72,6 +71,10 @@ public class CoberturaReportOnlyMojo extends AbstractCoberturaMojo {
 	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (skipMojo()) {
+			return;
+		}
+
 		executeReport(getDataFile(), outputDirectory, getCompileSourceRoots());
 	}
 
@@ -115,7 +118,7 @@ public class CoberturaReportOnlyMojo extends AbstractCoberturaMojo {
 
 	private void executeReportTask(ReportTask task, String outputFormat) {
 		task.setOutputFormat(outputFormat);
-		
+
 		// execute task
 		try {
 			task.execute();
