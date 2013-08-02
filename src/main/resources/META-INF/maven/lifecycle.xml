@@ -16,7 +16,7 @@
         <id>test</id>
         <configuration>
           <classesDirectory>${project.build.directory}/generated-classes/cobertura</classesDirectory>
-          <testFailureIgnore>true</testFailureIgnore>
+          <testFailureIgnore>false</testFailureIgnore>
 		  <!-- http://nayidisha.com/techblog/an-over-eager-code-coverage-tool -->
 		  <skipTests>false</skipTests>
         </configuration>
