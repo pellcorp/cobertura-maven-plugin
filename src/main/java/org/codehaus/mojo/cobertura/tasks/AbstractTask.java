@@ -264,7 +264,8 @@ public abstract class AbstractTask
             getLog().debug( "--------------------" );
             getLog().debug( " Standard error from the Cobertura task:" );
             getLog().debug( "--------------------" );
-            getLog().error( stderr.getOutput() );
+            // FIXME - for some reason log4j is outputting to system.err!
+            getLog().info( stderr.getOutput() );
             getLog().debug( "--------------------" );
         }
 
