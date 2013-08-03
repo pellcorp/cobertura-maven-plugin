@@ -104,11 +104,11 @@ public class CheckTask
         {
             if ( config.isHaltOnFailure() )
             {
-                throw new MojoFailureException( "Coverage check failed. See messages above." );
+                throw new MojoFailureException( "Coverage check failed. Check coverage report." );
             }
             else
             {
-                getLog().error( "Coverage check failed. See messages above." );
+                getLog().error( "Coverage check failed. Check coverage report." );
             }
         }
     }
