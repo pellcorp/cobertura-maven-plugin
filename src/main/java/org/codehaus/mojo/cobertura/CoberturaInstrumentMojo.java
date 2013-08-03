@@ -42,6 +42,7 @@ import org.codehaus.plexus.util.IOUtil;
  * 
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  * @goal instrument
+ * @phase process-test-classes
  * @requiresDependencyResolution compile
  */
 public class CoberturaInstrumentMojo
@@ -83,6 +84,12 @@ public class CoberturaInstrumentMojo
     private ConfigInstrumentation instrumentation;  
 
     /**
+     * If specified, instrument target/test-classes, instead of generated-classes/cobertura
+     * @parameter default-value="false"
+     */
+    private boolean defaultOutputDirectory;  
+    
+    /**
      * build up a command line from the parameters and run Cobertura to instrument the code.
      * @throws MojoExecutionException
      */
@@ -102,9 +109,13 @@ public class CoberturaInstrumentMojo
         }
         else
         {
-            File instrumentedDirectory =
-                new File( getProject().getBuild().getDirectory(), "generated-classes/cobertura" );
-
+            File instrumentedDirectory = null;
+            if (!defaultOutputDirectory) {
+            	instrumentedDirectory = new File( getProject().getBuild().getDirectory(), "generated-classes/cobertura" );
+            } else {
+            	instrumentedDirectory = new File(getProject().getBuild().getDirectory());
+            }
+            
             if ( !instrumentedDirectory.exists() )
             {
                 instrumentedDirectory.mkdirs();
@@ -129,16 +140,18 @@ public class CoberturaInstrumentMojo
                 outputDirectory.mkdirs();
             }
 
-            // Copy all of the classes into the instrumentation basedir.
-            try
-            {
-                FileUtils.copyDirectoryStructure( outputDirectory, instrumentedDirectory );
+            if (!instrumentedDirectory.equals(outputDirectory)) {
+	            // Copy all of the classes into the instrumentation basedir.
+	            try
+	            {
+	                FileUtils.copyDirectoryStructure( outputDirectory, instrumentedDirectory );
+	            }
+	            catch ( IOException e )
+	            {
+	                throw new MojoExecutionException( "Unable to prepare instrumentation directory.", e );
+	            }
             }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException( "Unable to prepare instrumentation directory.", e );
-            }
-
+            
             instrumentation.setBasedir( instrumentedDirectory );
 
             // Cobertura requires an existing dir

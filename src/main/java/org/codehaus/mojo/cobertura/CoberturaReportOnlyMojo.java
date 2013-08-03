@@ -56,14 +56,6 @@ public class CoberturaReportOnlyMojo extends AbstractCoberturaMojo {
 	 */
 	private File outputDirectory;
 
-	/**
-	 * The format of the report. (supports 'html' or 'xml'. defaults to 'html')
-	 * 
-	 * @parameter expression="${cobertura.report.format}"
-	 * @deprecated
-	 */
-	private String format;
-
 	public CoberturaReportOnlyMojo() {
 		if (MaxHeapSizeUtil.getInstance().envHasMavenMaxMemSetting()) {
 			maxmem = MaxHeapSizeUtil.getInstance().getMavenMaxMemSetting();
@@ -107,10 +99,6 @@ public class CoberturaReportOnlyMojo extends AbstractCoberturaMojo {
 		cmdLineArgs.setUseCommandsFile(true);
 		task.setCmdLineArgs(cmdLineArgs);
 
-		if (format != null) {
-			formats = new String[] { format };
-		}
-
 		for (int i = 0; i < formats.length; i++) {
 			executeReportTask(task, formats[i]);
 		}
@@ -119,17 +107,10 @@ public class CoberturaReportOnlyMojo extends AbstractCoberturaMojo {
 	private void executeReportTask(ReportTask task, String outputFormat) {
 		task.setOutputFormat(outputFormat);
 
-		// execute task
 		try {
 			task.execute();
 		} catch (MojoExecutionException e) {
-			// throw new MavenReportException(
-			// "Error in Cobertura Report generation: " + e.getMessage(), e );
-			// better don't break the build if report is not generated, also due
-			// to the sporadic MCOBERTURA-56
-			getLog().error(
-					"Error in Cobertura Report generation: " + e.getMessage(),
-					e);
+			getLog().error("Error in Cobertura Report generation: " + e.getMessage(), e);
 		}
 	}
 }
