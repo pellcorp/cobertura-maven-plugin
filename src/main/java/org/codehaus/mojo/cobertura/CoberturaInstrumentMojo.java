@@ -84,12 +84,6 @@ public class CoberturaInstrumentMojo
     private ConfigInstrumentation instrumentation;  
 
     /**
-     * If specified, instrument target/test-classes, instead of generated-classes/cobertura
-     * @parameter default-value="false"
-     */
-    private boolean defaultOutputDirectory;  
-    
-    /**
      * build up a command line from the parameters and run Cobertura to instrument the code.
      * @throws MojoExecutionException
      */
@@ -109,12 +103,7 @@ public class CoberturaInstrumentMojo
         }
         else
         {
-            File instrumentedDirectory = null;
-            if (!defaultOutputDirectory) {
-            	instrumentedDirectory = new File( getProject().getBuild().getDirectory(), "generated-classes/cobertura" );
-            } else {
-            	instrumentedDirectory = new File(getProject().getBuild().getDirectory());
-            }
+            File instrumentedDirectory = new File( getProject().getBuild().getDirectory(), "generated-classes/cobertura" );
             
             if ( !instrumentedDirectory.exists() )
             {
@@ -140,16 +129,13 @@ public class CoberturaInstrumentMojo
                 outputDirectory.mkdirs();
             }
 
-            if (!instrumentedDirectory.equals(outputDirectory)) {
-	            // Copy all of the classes into the instrumentation basedir.
-	            try
-	            {
-	                FileUtils.copyDirectoryStructure( outputDirectory, instrumentedDirectory );
-	            }
-	            catch ( IOException e )
-	            {
-	                throw new MojoExecutionException( "Unable to prepare instrumentation directory.", e );
-	            }
+            try
+            {
+                FileUtils.copyDirectoryStructure( outputDirectory, instrumentedDirectory );
+            }
+            catch ( IOException e )
+            {
+                throw new MojoExecutionException( "Unable to prepare instrumentation directory.", e );
             }
             
             instrumentation.setBasedir( instrumentedDirectory );
