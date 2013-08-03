@@ -86,11 +86,14 @@ public class ReportTask
         // Check the return code and print a message
         if ( returnCode == 0 )
         {
-            getLog().info( "Cobertura Report generation was successful." );
+            getLog().info(outputFormat.toUpperCase() 
+            		+ " Cobertura Report generation was successful." );
         }
         else
         {
-            throw new MojoExecutionException( "Unable to generate Cobertura Report for project." );
+            throw new MojoExecutionException( "Unable to generate " 
+            		+ outputFormat.toUpperCase() 
+            		+ " Cobertura Report for project." );
         }
     }
 
