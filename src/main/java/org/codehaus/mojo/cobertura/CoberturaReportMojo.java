@@ -67,7 +67,14 @@ public class CoberturaReportMojo extends AbstractCoberturaMojo {
 			return;
 		}
 
-		executeReport(getDataFile(), outputDirectory, getCompileSourceRoots());
+		if ( !getDataFile().exists() )
+        {
+            getLog().info( "Cannot generate reports, instrumentation not performed - skipping." );
+        }
+		else
+		{
+        	executeReport(getDataFile(), outputDirectory, getCompileSourceRoots());
+        }
 	}
 
 	/**
